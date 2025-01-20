@@ -1,9 +1,10 @@
-
 #include <FreeRTOS.h>
 #include <task.h>
 #include <semphr.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>  // For rand()
+#include <timers.h>  // For TimerHandle_t and related functions
 
 #define TIMER_DIVIDER     80          
 #define TIMER_MAX_COUNT   1000000     
@@ -22,8 +23,11 @@ void onTimerCallback(void *parameters) {
 
     xSemaphoreGiveFromISR(binary_semaphore, &task_woken);
 
-    portYIELD_FROM_ISR();
+    portYIELD_FROM_ISR(task_woken);
 }
+
+// Function prototype for setupTimer
+void setupTimer(TimerHandle_t *timer_handle);
 
 void printValuesTask(void *parameters) {
     while (1) {
@@ -32,8 +36,6 @@ void printValuesTask(void *parameters) {
         }
     }
 }
-
-
 
 void setupTimer(TimerHandle_t *timer_handle) {
     *timer_handle = xTimerCreate(
@@ -54,7 +56,6 @@ void setupTimer(TimerHandle_t *timer_handle) {
         while (1); // Halt
     }
 }
-
 
 int main(void) {
     printf("--- FreeRTOS ISR Semaphore Demo ---\n");
