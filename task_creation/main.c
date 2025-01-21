@@ -6,7 +6,7 @@
 #include <string.h>
 
 // Some string to print
-const char msg[] = "Barkadeer brig Arr booty rum.";
+const char msg[] = "New Message.";
 
 // Task handles
 static TaskHandle_t task_1 = NULL;
